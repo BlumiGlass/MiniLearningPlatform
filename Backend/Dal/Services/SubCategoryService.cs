@@ -55,6 +55,13 @@ public class SubCategoryService : ISubCategoryService
         return dbContext.SubCategories.ToList();
     }
 
+    public List<SubCategory> ReadByCategoryId(int categoryId)
+    {
+        return dbContext.SubCategories
+            .Where(sc => sc.CategoryId == categoryId)
+            .ToList();
+    }
+
     public SubCategory Update(SubCategory entity)
     {
         var subCategory = dbContext.SubCategories.Find(entity.Id);

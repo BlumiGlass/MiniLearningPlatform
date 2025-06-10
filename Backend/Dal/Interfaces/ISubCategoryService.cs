@@ -9,4 +9,5 @@ namespace Dal.Interfaces;
 
 public interface ISubCategoryService:ICrud<SubCategory>
 {
+    List<SubCategory> ReadByCategoryId(int categoryId);
 }
