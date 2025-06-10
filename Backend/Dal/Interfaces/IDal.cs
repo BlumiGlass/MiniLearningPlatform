@@ -12,5 +12,7 @@ public interface IDal
 {
     ApplicationDbContext Context { get; }
     ICategoryService CategoryService { get; }
-
+    ISubCategoryService SubCategoryService { get; }
+    IUserService UserService { get; }
+    IPromptService PromptService { get; }
 }

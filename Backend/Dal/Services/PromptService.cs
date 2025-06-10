@@ -52,6 +52,13 @@ public class PromptService : IPromptService
         return dbContext.Prompts.ToList();
     }
 
+    public List<Prompt> ReadByUserId(int userId)
+    {
+        return dbContext.Prompts
+            .Where(p => p.UserId == userId)
+            .ToList();
+    }
+
     public Prompt Update(Prompt entity)
     {
         var existingPrompt = dbContext.Prompts.Find(entity.Id);
