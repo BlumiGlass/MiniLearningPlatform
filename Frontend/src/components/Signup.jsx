@@ -42,10 +42,10 @@ const Signup = () => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" sx={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
-      <Box boxShadow={3} borderRadius={3} p={4} bgcolor="#fff" minWidth={340}>
+    <Box minHeight="100vh" width="100vw" display="flex" alignItems="center" justifyContent="center" sx={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', position: 'fixed', top: 0, left: 0, zIndex: 0 }}>
+      <Box boxShadow={3} borderRadius={3} p={4} bgcolor="#fff" minWidth={340} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
         <Typography variant="h5" mb={2} align="center" color="primary.main" fontWeight={600}>Sign up</Typography>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{ width: 300 }}>
           <TextField
             label="ID"
             name="id"
@@ -55,7 +55,7 @@ const Signup = () => {
             helperText={errors.id}
             fullWidth
             margin="normal"
-            maxLength={9}
+            inputProps={{ maxLength: 9 }}
           />
           <TextField
             label="Name"
@@ -76,10 +76,10 @@ const Signup = () => {
             helperText={errors.phone}
             fullWidth
             margin="normal"
-            maxLength={10}
+            inputProps={{ maxLength: 10 }}
           />
           {apiError && <Typography color="error" align="center">{apiError}</Typography>}
-          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2, borderRadius: 2, fontWeight: 600, fontSize: 16 }}>
+          <Button type="submit" variant="contained" fullWidth sx={{ mt: 2, borderRadius: 2, fontWeight: 600, fontSize: 16, background: '#b2e0d6', color: '#1a3c34', '&:hover': { background: '#8fd3c6' } }}>
             Sign Up
           </Button>
         </form>
