@@ -39,22 +39,24 @@ const Login = () => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" >
-      <Typography variant="h5" mb={2}>Login</Typography>
-      <form onSubmit={handleSubmit} style={{ width: 300 }}>
-        <TextField
-          label="User ID"
-          variant="outlined"
-          fullWidth
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-          margin="normal"
-        />
-        {error && <Typography color="error">{error}</Typography>}
-        <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-          Send
-        </Button>
-      </form>
+    <Box minHeight="100vh" width="100vw" display="flex" alignItems="center" justifyContent="center" sx={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', position: 'fixed', top: 0, left: 0, zIndex: 0 }}>
+      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" boxShadow={3} borderRadius={3} p={4} bgcolor="#fff" minWidth={340}>
+        <Typography variant="h5" mb={2}>Login</Typography>
+        <form onSubmit={handleSubmit} style={{ width: 300 }}>
+          <TextField
+            label="User ID"
+            variant="outlined"
+            fullWidth
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            margin="normal"
+          />
+          {error && <Typography color="error">{error}</Typography>}
+          <Button type="submit" variant="contained" fullWidth sx={{ mt: 2, borderRadius: 2, fontWeight: 600, fontSize: 16, background: '#b2e0d6', color: '#1a3c34', '&:hover': { background: '#8fd3c6' } }}>
+            Send
+          </Button>
+        </form>
+      </Box>
     </Box>
   );
 };
