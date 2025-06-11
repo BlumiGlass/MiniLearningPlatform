@@ -47,17 +47,36 @@ public class PromptServiceBl : IPromptServiceBl
         };
     }
 
-    public List<PromptBl> GetUserPrompts(int userId)
+    public async Task<List<PromptBl>> GetUserPrompts(int userId)
     {
-        return promptService.ReadByUserId(userId)
+        var prompts = await promptService.ReadByUserId(userId);
+        return prompts
             .Select(p => new PromptBl
             {
                 Id = p.Id,
                 UserId = p.UserId,
+                User = p.User == null ? null : new UserBl
+                {
+                    Id = p.User.Id,
+                    Name = p.User.Name,
+                    Phone = p.User.Phone
+                },
                 CategoryId = p.CategoryId,
+                Category = p.Category == null ? null : new CategoryBl
+                {
+                    Id = p.Category.Id,
+                    Name = p.Category.Name
+                },
                 SubCategoryId = p.SubCategoryId,
+                SubCategory = p.SubCategory == null ? null : new SubCategoryBl
+                {
+                    Id = p.SubCategory.Id,
+                    Name = p.SubCategory.Name
+                },
                 PromptText = p.PromptText,
+                Response = p.Response,
                 CreatedAt = p.CreatedAt
             }).ToList();
     }
+
 }

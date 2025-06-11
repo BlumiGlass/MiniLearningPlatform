@@ -10,5 +10,5 @@ namespace Bl.Interfaces;
 public interface IPromptServiceBl
 {
     Task<PromptBl> CreatePromptAsync(int userId, int categoryId, int subCategoryId, string promptText);
-    List<PromptBl> GetUserPrompts(int userId);
+    Task<List<PromptBl>> GetUserPrompts(int userId);
 }

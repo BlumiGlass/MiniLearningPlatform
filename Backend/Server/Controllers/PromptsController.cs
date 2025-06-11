@@ -23,9 +23,9 @@ public class PromptsController : ControllerBase
     }
 
     [HttpGet("user/{userId}")]
-    public ActionResult<List<PromptBl>> GetUserPrompts(int userId)
+    public async Task<ActionResult<List<PromptBl>>> GetUserPrompts(int userId)
     {
-        var prompts = _promptService.GetUserPrompts(userId);
+        var prompts = await _promptService.GetUserPrompts(userId);
         return Ok(prompts);
     }
 }
