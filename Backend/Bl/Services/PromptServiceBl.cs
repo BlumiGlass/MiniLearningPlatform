@@ -14,14 +14,21 @@ namespace Bl.Services;
 public class PromptServiceBl : IPromptServiceBl
 {
     private readonly IPromptService promptService;
-    public PromptServiceBl(IDal dal)
+    private IDal dal;
+    private readonly IAiService aiService;
+    public PromptServiceBl(IDal dal, IAiService aiService)
     {
         promptService = dal.PromptService;
+        this.dal = dal;
+        this.aiService = aiService;
     }
     public async Task<PromptBl> CreatePromptAsync(int userId, int categoryId, int subCategoryId, string promptText)
     {
-        // Simulate AI response (replace with real OpenAI call)
-        string aiResponse = $"AI lesson for: {promptText}";
+        var category = dal.CategoryService.Read(categoryId).Name??"Unknown";
+        var subCategory = dal.SubCategoryService.Read(subCategoryId).Name ?? "Unknown";
+        string aiResponse = await aiService.GetLessonAsync(category, subCategory, promptText);
+
+        //string aiResponse = $"AI lesson for: {promptText}";
 
         var prompt = new Prompt
         {

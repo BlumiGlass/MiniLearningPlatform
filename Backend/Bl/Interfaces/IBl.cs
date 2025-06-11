@@ -14,4 +14,5 @@ public interface IBl
     ISubCategoryServiceBl SubCategoryService { get; }
     IUserServiceBl UserService { get; }
     IPromptServiceBl PromptService { get; }
+    IAiService aiService { get; }
 }
