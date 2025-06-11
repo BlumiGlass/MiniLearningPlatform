@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button, Box, Typography, AppBar, Toolbar } from '@mui/material';
 import { logoutUser } from '../redux/authSlice';
 import { useNavigate, Routes, Route } from 'react-router-dom';
-import { fetchNewTopics, fetchPromptsHistory } from '../api';
+import { fetchPromptsHistory } from '../api';
 import History from './History';
+import NewPrompt from './NewPrompt';
 
 const Dashboard = () => {
   const user = useSelector((state) => state.auth.user);
@@ -14,15 +15,16 @@ const Dashboard = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showNewPrompt, setShowNewPrompt] = useState(false);
 
   const handleLogout = () => {
     dispatch(logoutUser());
     navigate('/');
   };
 
-  const handleNewTopic = async () => {
-    const result = await fetchNewTopics(user?.id);
-    alert(result.message || 'A new topic was selected!');
+  const handleNewTopic = () => {
+    setShowNewPrompt(true);
+    navigate('/dashboard/new');
   };
 
   const handleHistory = async () => {
@@ -64,6 +66,7 @@ const Dashboard = () => {
       </AppBar>
       <Routes>
         <Route path="/history" element={<History history={history} loading={loading} error={error} onBack={() => { setShowHistory(false); navigate('/dashboard'); }} />} />
+        <Route path="/new" element={<NewPrompt userId={user?.id} onBack={() => { setShowNewPrompt(false); navigate('/dashboard'); }} onSubmit={() => { setShowNewPrompt(false); navigate('/dashboard'); }} />} />
         <Route path="*" element={
           <Box flex={1} display="flex" alignItems="center" justifyContent="center" width="100%" p={0} m={0} sx={{ margin: 0, padding: 0 }}>
             <Box display="flex" flexDirection="row" gap={4} width="80%" maxWidth={900} sx={{ margin: 0, padding: 0 }}>
