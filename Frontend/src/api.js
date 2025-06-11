@@ -71,3 +71,9 @@ export async function createPrompt({ userId, categoryId, subCategoryId, promptTe
     return { status: 'error', message: err.message };
   }
 }
+
+export async function fetchAllUsers() {
+  const response = await fetch('http://localhost:5065/api/users');
+  if (!response.ok) throw new Error('Failed to fetch users');
+  return await response.json();
+}

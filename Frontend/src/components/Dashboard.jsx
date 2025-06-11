@@ -6,6 +6,9 @@ import { useNavigate, Routes, Route } from 'react-router-dom';
 import { fetchPromptsHistory } from '../api';
 import History from './History';
 import NewPrompt from './NewPrompt';
+import LogoutIcon from '@mui/icons-material/Logout';
+import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
+import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 
 const Dashboard = () => {
   const user = useSelector((state) => state.auth.user);
@@ -43,12 +46,12 @@ const Dashboard = () => {
   };
 
   return (
-    <Box minHeight="100vh" width="100vw" display="flex" flexDirection="column" p={0} m={0} sx={{ overflow: 'hidden', margin: 0, padding: 0 }}>
-      <AppBar position="static" color="default" elevation={1} sx={{ m: 0, p: 0, minHeight: 90 }}>
+    <Box minHeight="100vh" width="100vw" display="flex" flexDirection="column" p={0} m={0} sx={{ overflow: 'hidden', margin: 0, padding: 0, background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', position: 'fixed', top: 0, left: 0, zIndex: 0 }}>
+      <AppBar position="static" color="default" elevation={3} sx={{ m: 0, p: 0, minHeight: 90, background: '#fff', color: '#1a3c34', boxShadow: '0 2px 8px 0 rgba(60,60,60,0.08)' }}>
         <Toolbar sx={{
           display: 'flex',
           flexDirection: 'row',
-          alignItems: 'center',
+          alignItems: 'flex-end', // align to bottom
           justifyContent: 'space-between',
           m: 0,
           p: 0,
@@ -56,61 +59,109 @@ const Dashboard = () => {
           minHeight: 90,
           gap: 6
         }}>
-          <Typography variant="h4" color="primary" fontWeight={300} sx={{ fontSize: 38, letterSpacing: 1, pl: 10, display: 'flex', alignItems: 'center', height: '100%' }}>
+          <Typography variant="h4" sx={{ fontWeight: 300, fontSize: 38, letterSpacing: 1, pl: 10, color: '#1a3c34', display: 'flex', alignItems: 'flex-end', height: '100%' }}>
             {user?.name || 'User'}
           </Typography>
-          <Button color="error" variant="outlined" onClick={handleLogout} sx={{ fontWeight: 600, background: '#ffd6d6', borderColor: '#ffb3b3', color: '#b22222', mr: 10, '&:hover': { background: '#ffb3b3' }, height: 48, display: 'flex', alignItems: 'center' }}>
+          <Button color="primary" variant="contained" onClick={handleLogout} sx={{ fontWeight: 600, background: '#b2e0d6', color: '#1a3c34', borderColor: '#b2e0d6', mr: 10, '&:hover': { background: '#8fd3c6' }, height: 48, display: 'flex', alignItems: 'flex-end' }} startIcon={<LogoutIcon />}>
             Logout
           </Button>
         </Toolbar>
       </AppBar>
-      <Routes>
-        <Route path="/history" element={<History history={history} loading={loading} error={error} onBack={() => { setShowHistory(false); navigate('/dashboard'); }} />} />
-        <Route path="/new" element={<NewPrompt userId={user?.id} onBack={() => { setShowNewPrompt(false); navigate('/dashboard'); }} onSubmit={() => { setShowNewPrompt(false); navigate('/dashboard'); }} />} />
-        <Route path="*" element={
-          <Box flex={1} display="flex" alignItems="center" justifyContent="center" width="100%" p={0} m={0} sx={{ margin: 0, padding: 0 }}>
-            <Box display="flex" flexDirection="row" gap={4} width="80%" maxWidth={900} sx={{ margin: 0, padding: 0 }}>
-              <Button variant="contained" color="primary" 
-                sx={{
-                  width: '50%',
-                  height: 180,
-                  minHeight: 120,
-                  aspectRatio: '1/1',
-                  fontWeight: 600,
-                  fontSize: 20,
-                  borderRadius: 3,
-                  boxShadow: 2,
-                  background: '#b2e0d6',
-                  color: '#1a3c34',
-                  '&:hover': { background: '#8fd3c6' }
-                }}
-                onClick={handleNewTopic}
-              >
-                Learn Something New
-              </Button>
-              <Button variant="outlined" color="primary"
-                sx={{
-                  width: '50%',
-                  height: 180,
-                  minHeight: 120,
-                  aspectRatio: '1/1',
-                  fontWeight: 600,
-                  fontSize: 20,
-                  borderRadius: 3,
-                  boxShadow: 2,
-                  background: '#f7e6b7',
-                  color: '#7c5c0b',
-                  borderColor: '#f7e6b7',
-                  '&:hover': { background: '#f3d98c', borderColor: '#f3d98c' }
-                }}
-                onClick={handleHistory}
-              >
-                View Learning History
-              </Button>
+      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="calc(100vh - 90px)" width="100%" p={0} m={0} sx={{ margin: 0, padding: 0 }}>
+        <Routes>
+          <Route path="/history" element={<History history={history} loading={loading} error={error} onBack={() => { setShowHistory(false); navigate('/dashboard'); }} onLogout={handleLogout} />} />
+          <Route path="/new" element={<NewPrompt userId={user?.id} onBack={() => { setShowNewPrompt(false); navigate('/dashboard'); }} onSubmit={() => { setShowNewPrompt(false); navigate('/dashboard'); }} />} />
+          <Route path="*" element={
+            <Box flex={1} display="flex" alignItems="center" justifyContent="center" width="100%" p={0} m={0} sx={{ margin: 0, padding: 0, height: '100%' }}>
+              <Box display="flex" flexDirection="row" gap={6} width="80%" maxWidth={900} alignItems="center" justifyContent="center" height="100%" sx={{ margin: 0, padding: 0 }}>
+                <Button variant="contained" color="primary"
+                  sx={{
+                    width: 320,
+                    height: 320,
+                    minWidth: 220,
+                    minHeight: 220,
+                    borderRadius: '50%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 800,
+                    fontSize: 30,
+                    letterSpacing: 1,
+                    boxShadow: 8,
+                    background: 'linear-gradient(135deg, #b2e0d6 0%, #c3cfe2 100%)',
+                    color: '#1a3c34',
+                    transition: 'transform 0.18s',
+                    mx: 6,
+                    mb: 2,
+                    p: 0,
+                    textAlign: 'center',
+                    whiteSpace: 'normal',
+                    '&:hover': {
+                      background: 'linear-gradient(135deg, #8fd3c6 0%, #b2e0d6 100%)',
+                      transform: 'scale(1.08)'
+                    }
+                  }}
+                  onClick={handleNewTopic}
+                >
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, width: '100%' }}>
+                    <Box sx={{ fontSize: 110, mb: 1, color: '#1a3c34', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>📚</Box>
+                    <Typography variant="subtitle1" sx={{ fontSize: 38, fontWeight: 900, color: '#1a3c34', opacity: 0.95, mt: 1, letterSpacing: 1, lineHeight: 1, textAlign: 'center' }}>
+                      LEARN
+                    </Typography>
+                    <Typography variant="subtitle2" sx={{ fontSize: 20, fontWeight: 700, color: '#1a3c34', opacity: 0.85, letterSpacing: 0.5, mt: 0.5, textAlign: 'center', wordBreak: 'break-word' }}>
+                      Something New
+                    </Typography>
+                  </Box>
+                </Button>
+                <Button variant="outlined" color="primary"
+                  sx={{
+                    width: 320,
+                    height: 320,
+                    minWidth: 220,
+                    minHeight: 220,
+                    borderRadius: 28,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 800,
+                    fontSize: 30,
+                    letterSpacing: 1,
+                    boxShadow: 8,
+                    background: 'linear-gradient(135deg, #ffe6e6 0%, #fffbe6 100%)',
+                    color: '#b22222',
+                    border: '5px solid rgba(255,179,179,0.7)',
+                    transition: 'box-shadow 0.18s, border 0.18s, transform 0.18s',
+                    mx: 6,
+                    mb: 2,
+                    p: 0,
+                    textAlign: 'center',
+                    whiteSpace: 'normal',
+                    '&:hover': {
+                      background: 'linear-gradient(135deg, #ffd6d6 0%, #fffbe6 100%)',
+                      border: '5px solid #b22222',
+                      boxShadow: 12,
+                      transform: 'scale(1.08)'
+                    }
+                  }}
+                  onClick={handleHistory}
+                >
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, width: '100%' }}>
+                    <Box sx={{ fontSize: 110, mb: 1, color: '#b22222', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🕑</Box>
+                    <Typography variant="subtitle2" sx={{ fontSize: 20, fontWeight: 700, color: '#b22222', opacity: 0.9, letterSpacing: 0.5, mt: 1, textAlign: 'center', wordBreak: 'break-word' }}>
+                      View Learning
+                    </Typography>
+                    <Typography variant="subtitle1" sx={{ fontSize: 38, fontWeight: 900, color: '#b22222', opacity: 0.95, mt: 0.5, letterSpacing: 1, lineHeight: 1, textAlign: 'center' }}>
+                      HISTORY
+                    </Typography>
+                  </Box>
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        } />
-      </Routes>
+          } />
+        </Routes>
+      </Box>
     </Box>
   );
 };
