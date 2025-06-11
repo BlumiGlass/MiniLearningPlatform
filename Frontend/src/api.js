@@ -26,3 +26,25 @@ export async function signupRequest(userObj) {
     return { status: 'error', message: err.message };
   }
 }
+
+export async function fetchNewTopics(userId) {
+  try {
+    const response = await fetch(`http://localhost:5065/api/users/${userId}/new-topic`);
+    if (!response.ok) throw new Error('Failed to fetch new topic with status ' + response.status);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    return { status: 'error', message: err.message };
+  }
+}
+
+export async function fetchPromptsHistory(userId) {
+  try {
+    const response = await fetch(`http://localhost:5065/api/prompts/user/${userId}`);
+    if (!response.ok) throw new Error('Failed to fetch history');
+    const data = await response.json();
+    return Array.isArray(data) ? data : [];
+  } catch (err) {
+    return [];
+  }
+}

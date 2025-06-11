@@ -1,6 +1,7 @@
 ﻿using Dal.Data;
 using Dal.Interfaces;
 using Dal.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,12 +53,17 @@ public class PromptService : IPromptService
         return dbContext.Prompts.ToList();
     }
 
-    public List<Prompt> ReadByUserId(int userId)
+    public async Task<List<Prompt>> ReadByUserId(int userId)
     {
-        return dbContext.Prompts
+        return await dbContext.Prompts
+            .Include(p => p.User)
+            .Include(p => p.Category)
+            .Include(p => p.SubCategory)
             .Where(p => p.UserId == userId)
-            .ToList();
+            .ToListAsync();
     }
+
+
 
     public Prompt Update(Prompt entity)
     {

@@ -4,5 +4,5 @@ namespace Dal.Interfaces;
 
 public interface IPromptService:ICrud<Prompt>
 {
-    List<Prompt> ReadByUserId(int userId);
+    Task<List<Prompt>> ReadByUserId(int userId);
 }
