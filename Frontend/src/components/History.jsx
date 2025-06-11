@@ -3,7 +3,7 @@ import { Box, Typography, Button } from '@mui/material';
 
 const History = ({ history, loading, error, onBack }) => {
   return (
-    <Box width="80%" maxWidth={900}>
+    <Box width="80%" maxWidth={900} sx={{ margin: '0 auto', p: 0 }}>
       <Typography variant="h5" mb={3} fontWeight={600} color="primary">History</Typography>
       {loading && <Typography>Loading...</Typography>}
       {error && <Typography color="error">{error}</Typography>}

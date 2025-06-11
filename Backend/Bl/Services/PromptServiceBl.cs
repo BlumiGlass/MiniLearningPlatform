@@ -28,8 +28,6 @@ public class PromptServiceBl : IPromptServiceBl
         var subCategory = dal.SubCategoryService.Read(subCategoryId).Name ?? "Unknown";
         string aiResponse = await aiService.GetLessonAsync(category, subCategory, promptText);
 
-        //string aiResponse = $"AI lesson for: {promptText}";
-
         var prompt = new Prompt
         {
             UserId = userId,
