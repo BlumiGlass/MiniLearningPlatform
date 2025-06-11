@@ -18,7 +18,7 @@ public class PromptServiceBl : IPromptServiceBl
     {
         promptService = dal.PromptService;
     }
-    public Task<PromptBl> CreatePromptAsync(int userId, int categoryId, int subCategoryId, string promptText)
+    public async Task<PromptBl> CreatePromptAsync(int userId, int categoryId, int subCategoryId, string promptText)
     {
         // Simulate AI response (replace with real OpenAI call)
         string aiResponse = $"AI lesson for: {promptText}";
@@ -35,7 +35,7 @@ public class PromptServiceBl : IPromptServiceBl
 
         promptService.Create(prompt);
 
-        return Task.FromResult(new PromptBl()
+        return new PromptBl()
         {
             Id = prompt.Id,
             UserId = prompt.UserId,
@@ -44,7 +44,7 @@ public class PromptServiceBl : IPromptServiceBl
             PromptText = prompt.PromptText,
             Response = prompt.Response,
             CreatedAt = prompt.CreatedAt
-        });
+        };
     }
 
     public List<PromptBl> GetUserPrompts(int userId)

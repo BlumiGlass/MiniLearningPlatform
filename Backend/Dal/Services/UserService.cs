@@ -40,10 +40,6 @@ public class UserService : IUserService
     public User Read(int id)
     {
         var user = dbContext.Users.Find(id);
-        if (user == null)
-        {
-            throw new KeyNotFoundException($"User with ID {id} not found.");
-        }
         return user;
     }
 
