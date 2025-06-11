@@ -23,10 +23,13 @@ public class BlManager : IBl
     public BlManager(IDal dal)
     {
         Dal = dal;
-        var configuration = new ConfigurationBuilder()
-        .AddJsonFile("appsettings.Development.json")
-        .Build();
-        aiService = new OpenAiService(new HttpClient(),configuration);
+        //real ai service
+        //var configuration = new ConfigurationBuilder()
+        //.AddJsonFile("appsettings.Development.json")
+        //.Build();
+        //aiService = new OpenAiService(new HttpClient(),configuration);
+        //mock ai service
+        aiService = new MockAiService();
         CategoryService = new CategoryServiceBl(Dal);
         SubCategoryService = new SubCategoryServiceBl(Dal);
         UserService = new UserServiceBl(Dal);

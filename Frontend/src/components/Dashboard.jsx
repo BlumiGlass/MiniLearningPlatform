@@ -46,7 +46,7 @@ const Dashboard = () => {
   };
 
   return (
-    <Box minHeight="100vh" width="100vw" display="flex" flexDirection="column" p={0} m={0} sx={{ overflow: 'hidden', margin: 0, padding: 0, background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', position: 'fixed', top: 0, left: 0, zIndex: 0 }}>
+    <Box minHeight="100vh" width="100vw" display="flex" flexDirection="column" p={0} m={0} sx={{ overflow: 'hidden', margin: 0, padding: 0, background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', zIndex: 0 }}>
       <AppBar position="static" color="default" elevation={3} sx={{ m: 0, p: 0, minHeight: 90, background: '#fff', color: '#1a3c34', boxShadow: '0 2px 8px 0 rgba(60,60,60,0.08)' }}>
         <Toolbar sx={{
           display: 'flex',
