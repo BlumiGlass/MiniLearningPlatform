@@ -10,9 +10,11 @@ namespace Server.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserServiceBl _userService;
-        public UsersController(IUserServiceBl userService,IConfiguration configuration) 
+        private readonly IConfiguration _configuration;
+        public UsersController(IBl bl,IConfiguration configuration) 
         {
-            _userService = userService;
+            _userService = bl.UserService;
+            _configuration = configuration;
         }
         [HttpGet]
         public ActionResult<List<UserBl>> GetAllUsers()
@@ -28,6 +30,11 @@ namespace Server.Controllers
         [HttpGet("{userId}")]
         public ActionResult<UserBl> GetUserById(int userId)
         {
+            var adminId= _configuration.GetSection("Admin").GetValue<int>("DefaultId");
+            if (userId == adminId)
+            {
+                return Ok(new UserBl { Id = adminId, Name = "Admin", Phone = "1234567890" });
+            }
             var user = _userService.GetUserById(userId);
             if (user == null)
             {

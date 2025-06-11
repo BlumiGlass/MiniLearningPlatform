@@ -18,20 +18,26 @@ public class BlManager : IBl
     public ISubCategoryServiceBl SubCategoryService { get; }
     public IUserServiceBl UserService { get; }
     public IPromptServiceBl PromptService { get; }
-    public BlManager()
+    public BlManager(IDal dal)
     {
-        ServiceCollection services = new ServiceCollection();
-        services.AddSingleton<IDal, DalManager>();
-        services.AddSingleton<ICategoryServiceBl, CategoryServiceBl>();
-        services.AddSingleton<ISubCategoryServiceBl, SubCategoryServiceBl>();
-        services.AddSingleton<IUserServiceBl, UserServiceBl>();
-        services.AddSingleton<IPromptServiceBl, PromptServiceBl>();
+        Dal = dal;
+        CategoryService = new CategoryServiceBl(Dal);
+        SubCategoryService = new SubCategoryServiceBl(Dal);
+        UserService = new UserServiceBl(Dal);
+        PromptService = new PromptServiceBl(Dal);
 
-        ServiceProvider serviceProvider = services.BuildServiceProvider();
-        Dal = serviceProvider.GetRequiredService<IDal>();
-        CategoryService = serviceProvider.GetRequiredService<ICategoryServiceBl>();
-        SubCategoryService = serviceProvider.GetRequiredService<ISubCategoryServiceBl>();
-        UserService = serviceProvider.GetRequiredService<UserServiceBl>();
-        PromptService = serviceProvider.GetRequiredService<PromptServiceBl>();
+        // ServiceCollection services = new ServiceCollection();
+        //// services.AddSingleton<IDal, DalManager>();
+        // services.AddScoped<ICategoryServiceBl, CategoryServiceBl>();
+        // services.AddScoped<ISubCategoryServiceBl, SubCategoryServiceBl>();
+        // services.AddScoped<IUserServiceBl, UserServiceBl>();
+        // services.AddScoped<IPromptServiceBl, PromptServiceBl>();
+
+        // ServiceProvider serviceProvider = services.BuildServiceProvider();
+        // //Dal = serviceProvider.GetRequiredService<IDal>();
+        // CategoryService = serviceProvider.GetRequiredService<ICategoryServiceBl>();
+        // SubCategoryService = serviceProvider.GetRequiredService<ISubCategoryServiceBl>();
+        // UserService = serviceProvider.GetRequiredService<UserServiceBl>();
+        // PromptService = serviceProvider.GetRequiredService<PromptServiceBl>();
     }
 }

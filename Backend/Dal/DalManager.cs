@@ -1,6 +1,7 @@
 ﻿using Dal.Data;
 using Dal.Interfaces;
 using Dal.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Dal;
@@ -13,21 +14,24 @@ public class DalManager:IDal
     public IUserService UserService { get; }
     public IPromptService PromptService { get; }
 
-    public DalManager()
+    public DalManager(ApplicationDbContext dbContext)
     {
-        ServiceCollection service = new();
+        Context = dbContext;
+        CategoryService = new CategoryService(this);
+        SubCategoryService = new SubCategoryService(this);
+        UserService = new UserService(this);
+        PromptService = new PromptService(this);
 
-        service.AddSingleton<ApplicationDbContext>();
-        service.AddSingleton<ICategoryService, CategoryService>();
-        service.AddSingleton<IUserService, UserService>();
-        service.AddSingleton<IPromptService,PromptService>();
-        service.AddSingleton<ISubCategoryService,SubCategoryService>();
+        //ServiceCollection service = new();
+        //service.AddScoped<ICategoryService, CategoryService>();
+        //service.AddScoped<IUserService, UserService>();
+        //service.AddScoped<IPromptService,PromptService>();
+        //service.AddScoped<ISubCategoryService,SubCategoryService>();
 
-        ServiceProvider provider = service.BuildServiceProvider();
-        Context = provider.GetRequiredService<ApplicationDbContext>();
-        CategoryService = provider.GetRequiredService<ICategoryService>();
-        SubCategoryService = provider.GetRequiredService<ISubCategoryService>();
-        UserService = provider.GetRequiredService<IUserService>();
-        PromptService = provider.GetRequiredService<IPromptService>();
+        //ServiceProvider provider = service.BuildServiceProvider();
+        //CategoryService = provider.GetRequiredService<ICategoryService>();
+        //SubCategoryService = provider.GetRequiredService<ISubCategoryService>();
+        //UserService = provider.GetRequiredService<IUserService>();
+        //PromptService = provider.GetRequiredService<IPromptService>();
     }
 }

@@ -10,9 +10,9 @@ public class PromptsController : ControllerBase
 {
     private readonly IPromptServiceBl _promptService;
 
-    public PromptsController(IPromptServiceBl promptService)
+    public PromptsController(IBl bl)
     {
-        _promptService = promptService;
+        _promptService = bl.PromptService;
     }
 
     [HttpPost]
