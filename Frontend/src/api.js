@@ -27,17 +27,6 @@ export async function signupRequest(userObj) {
   }
 }
 
-export async function fetchNewTopics(userId) {
-  try {
-    const response = await fetch(`http://localhost:5065/api/users/${userId}/new-topic`);
-    if (!response.ok) throw new Error('Failed to fetch new topic with status ' + response.status);
-    const data = await response.json();
-    return data;
-  } catch (err) {
-    return { status: 'error', message: err.message };
-  }
-}
-
 export async function fetchPromptsHistory(userId) {
   try {
     const response = await fetch(`http://localhost:5065/api/prompts/user/${userId}`);
@@ -46,5 +35,39 @@ export async function fetchPromptsHistory(userId) {
     return Array.isArray(data) ? data : [];
   } catch (err) {
     return [];
+  }
+}
+
+export async function fetchCategories() {
+  try {
+    const response = await fetch('http://localhost:5065/api/categories');
+    if (!response.ok) throw new Error('Failed to fetch categories');
+    return await response.json();
+  } catch (err) {
+    return [];
+  }
+}
+
+export async function fetchSubCategories(categoryId) {
+  try {
+    const response = await fetch(`http://localhost:5065/api/subCategories/${categoryId}`);
+    if (!response.ok) throw new Error('Failed to fetch subcategories');
+    return await response.json();
+  } catch (err) {
+    return [];
+  }
+}
+
+export async function createPrompt({ userId, categoryId, subCategoryId, promptText }) {
+  try {
+    const response = await fetch('http://localhost:5065/api/prompts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, categoryId, subCategoryId, promptText })
+    });
+    if (!response.ok) throw new Error('Failed to create prompt');
+    return await response.json();
+  } catch (err) {
+    return { status: 'error', message: err.message };
   }
 }
