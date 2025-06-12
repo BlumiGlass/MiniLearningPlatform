@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { Box, Typography, Button, TextField, MenuItem, CircularProgress } from '@mui/material';
-import { clearPrompt, setCategoryId, setError, setPrompt, setPromptText, setSubCategoryId, setUserId } from '../redux/newPromptSlice';
+import { clearPrompt, setCategoryId, setError, setloading, setPrompt, setPromptText, setSubCategoryId, setUserId } from '../redux/newPromptSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { createPromptAsync, fetchCategoriesAsync, fetchSubCategoriesAsync } from '../redux/thunk';
 
 const NewPrompt = ({ onBack }) => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
-  const { prompt, error, categories, subCategories, loadingCategories, loadingSubCategories } = useSelector(state => state.newPrompt);
+  const { prompt, error, categories, subCategories, loadingCategories, loadingSubCategories, loading } = useSelector(state => state.newPrompt);
 
   useEffect(() => {
     dispatch(clearPrompt());
@@ -22,9 +22,11 @@ const NewPrompt = ({ onBack }) => {
 
   const handleSubmit = async () => {
     dispatch(setError(''));
+    dispatch(setloading(true));
     try {
       dispatch(setUserId(user.id));
       const result = await dispatch(createPromptAsync({ ...prompt, userId: user.id })).unwrap();
+      dispatch(setloading(false));
       if (!result) {
         dispatch(setError(result?.message || 'Failed to create prompt'));
       }
@@ -35,15 +37,17 @@ const NewPrompt = ({ onBack }) => {
 
   return (
     <Box
-      position="absolute"
-      top={0}
-      left={0}
-      width="100vw"
-      height="100vh"
       display="flex"
+      flexDirection="column"
       alignItems="center"
-      justifyContent="center"
-      sx={{ background: 'none', overflow: 'hidden', p: 0, m: 0, zIndex: 0 }}
+      justifyContent="flex-start"
+      width="100%"
+      minHeight="100vh"
+      sx={{
+        pt: '100px', // מרווח מהסרגל
+        overflow: 'hidden', // מונע גלילה מיותרת
+        boxSizing: 'border-box'
+      }}
     >
       <Box
         width="100%"
@@ -52,10 +56,16 @@ const NewPrompt = ({ onBack }) => {
         p={4}
         borderRadius={3}
         boxShadow={3}
-        sx={{ boxSizing: 'border-box' }}
+        sx={{
+          boxSizing: 'border-box',
+          width: '100%',
+          maxWidth: 500,
+          overflowX: 'hidden',
+        }}
       >
         <Typography variant="h5" mb={3} fontWeight={600} color="primary">Learn Something New</Typography>
         {error && <Typography color="error" mb={2}>{error}</Typography>}
+        {loading && <CircularProgress size={24} sx={{ display: 'block', margin: '0 auto 16px' }} />}
         {prompt.responseText && <Typography color="success.main" mb={2}>Prompt created successfully!</Typography>}
         <TextField
           select
@@ -107,7 +117,7 @@ const NewPrompt = ({ onBack }) => {
               borderColor: "#1a3c34",
               color: "#1a3c34",
               fontWeight: 600,
-              opacity:1,
+              opacity: 1,
               '&:hover': { backgroundColor: "#8fd3c6", color: '#fff', borderColor: "#8fd3c6" }
             }}
           >
