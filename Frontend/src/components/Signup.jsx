@@ -55,7 +55,7 @@ const Signup = () => {
             helperText={errors.id}
             fullWidth
             margin="normal"
-            inputProps={{ maxLength: 9 }}
+            maxLength={9}
           />
           <TextField
             label="Name"
@@ -76,13 +76,14 @@ const Signup = () => {
             helperText={errors.phone}
             fullWidth
             margin="normal"
-            inputProps={{ maxLength: 10 }}
+            maxLength={10}
           />
           {apiError && <Typography color="error" align="center">{apiError}</Typography>}
           <Button type="submit" variant="contained" fullWidth sx={{ mt: 2, borderRadius: 2, fontWeight: 600, fontSize: 16, background: '#b2e0d6', color: '#1a3c34', '&:hover': { background: '#8fd3c6' } }}>
             Sign Up
           </Button>
         </form>
+        <Button type='reset' variant='outlined' sx={{mt:2, borderRadius:2, fontWeight:300, color:'#1a3c34', borderColor:'#8fd3c6', '&:hover':{background:'#b2e0d6', borderColor:'#1a3c34'}}} onClick={()=>navigate("/")}>Back To Log in</Button>
       </Box>
     </Box>
   );

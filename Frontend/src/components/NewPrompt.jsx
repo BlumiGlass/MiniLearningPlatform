@@ -1,68 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Box, Typography, Button, TextField, MenuItem, CircularProgress } from '@mui/material';
-import { fetchCategories, fetchSubCategories, createPrompt } from '../api';
+import { clearPrompt, setCategoryId, setError, setPrompt, setPromptText, setSubCategoryId, setUserId } from '../redux/newPromptSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { createPromptAsync, fetchCategoriesAsync, fetchSubCategoriesAsync } from '../redux/thunk';
 
-const NewPrompt = ({ onBack, onSubmit, userId }) => {
-  const [categories, setCategories] = useState([]);
-  const [subCategories, setSubCategories] = useState([]);
-  const [categoryId, setCategoryId] = useState('');
-  const [subCategoryId, setSubCategoryId] = useState('');
-  const [promptText, setPromptText] = useState('');
-  const [loadingCategories, setLoadingCategories] = useState(false);
-  const [loadingSubCategories, setLoadingSubCategories] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
-  const [responseText, setResponseText] = useState('');
+const NewPrompt = ({ onBack }) => {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.user);
+  const { prompt, error, categories, subCategories, loadingCategories, loadingSubCategories } = useSelector(state => state.newPrompt);
 
   useEffect(() => {
-    setLoadingCategories(true);
-    fetchCategories()
-      .then(data => setCategories(data))
-      .catch(() => setError('Failed to load categories'))
-      .finally(() => setLoadingCategories(false));
-  }, []);
+    dispatch(clearPrompt());
+    dispatch(fetchCategoriesAsync());
+  }, [dispatch]);
 
   useEffect(() => {
-    setSubCategoryId('');
-    setPromptText(''); 
-    if (categoryId) {
-      setLoadingSubCategories(true);
-      fetchSubCategories(categoryId)
-        .then(data => setSubCategories(data))
-        .catch(() => setError('Failed to load subcategories'))
-        .finally(() => setLoadingSubCategories(false));
-    } else {
-      setSubCategories([]);
+    if (prompt.categoryId) {
+      dispatch(fetchSubCategoriesAsync(prompt.categoryId));
     }
-  }, [categoryId]);
+  }, [prompt.categoryId, dispatch]);
 
   const handleSubmit = async () => {
-    setError('');
-    setSuccess(false);
-    setResponseText('');
+    dispatch(setError(''));
     try {
-      const result = await createPrompt({
-        userId,
-        categoryId,
-        subCategoryId,
-        promptText
-      });
-      if (result && result.id) {
-        setSuccess(true);
-        setCategoryId('');
-        setSubCategoryId('');
-        setPromptText('');
-        setResponseText(result.response || 'No response from server');
-      } else {
-        setError(result?.message || 'Failed to create prompt');
+      dispatch(setUserId(user.id));
+      const result = await dispatch(createPromptAsync({ ...prompt, userId: user.id })).unwrap();
+      if (!result) {
+        dispatch(setError(result?.message || 'Failed to create prompt'));
       }
     } catch (err) {
-      setError('Failed to create prompt');
+      dispatch(setError('Failed to create prompt'));
     }
   };
-
-  const pastelBlue = '#90CAF9';
-  const pastelGreen = '#A5D6A7';
 
   return (
     <Box
@@ -87,12 +56,13 @@ const NewPrompt = ({ onBack, onSubmit, userId }) => {
       >
         <Typography variant="h5" mb={3} fontWeight={600} color="primary">Learn Something New</Typography>
         {error && <Typography color="error" mb={2}>{error}</Typography>}
-        {success && <Typography color="success.main" mb={2}>Prompt created successfully!</Typography>}
+        {prompt.responseText && <Typography color="success.main" mb={2}>Prompt created successfully!</Typography>}
         <TextField
           select
           label="Category"
-          value={categoryId}
-          onChange={e => setCategoryId(e.target.value)}
+          value={prompt.categoryId}
+          onChange={e => dispatch(setCategoryId(e.target.value))}
+          onFocus={() => prompt.responseText && dispatch(clearPrompt())}
           fullWidth
           margin="normal"
           disabled={loadingCategories}
@@ -102,12 +72,12 @@ const NewPrompt = ({ onBack, onSubmit, userId }) => {
               <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
             ))}
         </TextField>
-        {categoryId && (
+        {prompt.categoryId && (
           <TextField
             select
             label="Subcategory"
-            value={subCategoryId}
-            onChange={e => setSubCategoryId(e.target.value)}
+            value={prompt.subCategoryId}
+            onChange={e => dispatch(setSubCategoryId(e.target.value))}
             fullWidth
             margin="normal"
             disabled={loadingSubCategories}
@@ -118,11 +88,11 @@ const NewPrompt = ({ onBack, onSubmit, userId }) => {
               ))}
           </TextField>
         )}
-        {categoryId && subCategoryId && (
+        {prompt.categoryId && prompt.subCategoryId && (
           <TextField
             label="Prompt Text"
-            value={promptText}
-            onChange={e => setPromptText(e.target.value)}
+            value={prompt.promptText}
+            onChange={e => dispatch(setPromptText(e.target.value))}
             fullWidth
             margin="normal"
             multiline
@@ -130,24 +100,25 @@ const NewPrompt = ({ onBack, onSubmit, userId }) => {
           />
         )}
         <Box display="flex" justifyContent="space-between" mt={3}>
-          <Button 
-            variant="outlined" 
+          <Button
+            variant="outlined"
             onClick={onBack}
             sx={{
-              borderColor: pastelBlue,
-              color: pastelBlue,
+              borderColor: "#1a3c34",
+              color: "#1a3c34",
               fontWeight: 600,
-              '&:hover': { backgroundColor: pastelBlue, color: '#fff', borderColor: pastelBlue }
+              opacity:1,
+              '&:hover': { backgroundColor: "#8fd3c6", color: '#fff', borderColor: "#8fd3c6" }
             }}
           >
             Back
           </Button>
-          <Button 
-            variant="contained" 
-            onClick={handleSubmit} 
-            disabled={!categoryId || !subCategoryId || !promptText}
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={!prompt.categoryId || !prompt.subCategoryId || !prompt.promptText}
             sx={{
-               background: '#b2e0d6', color: '#1a3c34', '&:hover': { background: '#8fd3c6' },
+              background: '#b2e0d6', color: '#1a3c34', '&:hover': { background: '#8fd3c6' },
               fontWeight: 600,
               boxShadow: 'none'
             }}
@@ -155,10 +126,10 @@ const NewPrompt = ({ onBack, onSubmit, userId }) => {
             Submit
           </Button>
         </Box>
-        {responseText && (
+        {prompt.responseText && (
           <Box mt={3} p={2} bgcolor="#f5f7fa" borderRadius={2} boxShadow={1}>
             <Typography variant="subtitle1" fontWeight={600} color="primary.main">Server Response:</Typography>
-            <Typography variant="body1" color="text.secondary">{responseText}</Typography>
+            <Typography variant="body1" color="text.secondary">{prompt.responseText}</Typography>
           </Box>
         )}
       </Box>
