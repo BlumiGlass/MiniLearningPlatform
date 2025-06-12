@@ -37,7 +37,7 @@ Ensure you have the following software installed on your machine:
 * Node.js (version 18 or higher)
 * SQL Server LocalDB (usually installed with Visual Studio)
 
-### 2. Install Dependencie
+### 2. Install Dependencies
 
 **For the Backend:**
 * Open the Solution file (`Backend/Backend.sln`) in Visual Studio.
