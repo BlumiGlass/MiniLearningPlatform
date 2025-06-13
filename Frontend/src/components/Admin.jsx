@@ -40,7 +40,7 @@ const Admin = () => {
   return (
     <Box minHeight="100vh" width="100vw" sx={{
       background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-      mb:3
+      pb: 3
     }}>
       <AppBar position="static" color="default" elevation={3} sx={{
         background: '#fff',
@@ -87,7 +87,7 @@ const Admin = () => {
                   <Typography variant="subtitle1" fontWeight={600}>{user.name}</Typography>
                 </AccordionSummary>
                 <AccordionDetails key={loadingPrompts[user.id] ? 'loading' : 'loaded'}>
-                  {loadingPrompts[user.id] || !userPrompts[user.id] ? (
+                  {loadingPrompts[user.id] || userPrompts[user.id] === undefined ? (
                     <Box display="flex" justifyContent="center" py={2}>
                       <CircularProgress size={24} />
                     </Box>

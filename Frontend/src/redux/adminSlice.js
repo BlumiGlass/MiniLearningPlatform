@@ -7,7 +7,7 @@ const adminSlice = createSlice({
         users: [],
         loadingUsers: false,
         error: null,
-        userPrompts: [],
+        userPrompts: {},
         loadingPrompts: {},
     },
     reducers: {

@@ -12,9 +12,9 @@ namespace Dal.Services;
 public class CategoryService : ICategoryService
 {
     private readonly ApplicationDbContext dbContext;
-    public CategoryService(IDal dal)
+    public CategoryService(ApplicationDbContext context)
     {
-        dbContext = dal.Context;
+        dbContext = context;
     }
     public Category Create(Category entity)
     {

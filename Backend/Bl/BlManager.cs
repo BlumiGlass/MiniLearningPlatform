@@ -20,33 +20,27 @@ public class BlManager : IBl
     public IUserServiceBl UserService { get; }
     public IPromptServiceBl PromptService { get; }
     public IAiService aiService { get; }
-    public BlManager(IDal dal)
-    {
-        Dal = dal;
-        //real ai service
-        var configuration = new ConfigurationBuilder()
-        .AddJsonFile("appsettings.Development.json")
-        .Build();
-        aiService = new OpenAiService(new HttpClient(), configuration);
-        //mock ai service
-        //aiService = new MockAiService();
-        CategoryService = new CategoryServiceBl(Dal);
-        SubCategoryService = new SubCategoryServiceBl(Dal);
-        UserService = new UserServiceBl(Dal);
-        PromptService = new PromptServiceBl(Dal, aiService);
+    public BlManager(IConfigurationBuilder configurationBuilder)
+    {  
+        ServiceCollection services = new ServiceCollection();
+        services.AddScoped<IConfiguration>(conf =>
+        {
+            return configurationBuilder.AddJsonFile("appsettings.Development.json").Build();
+        });
+        services.AddHttpClient<IAiService, OpenAiService>();
+        services.AddScoped<IDal, DalManager>();
+        services.AddScoped<ICategoryServiceBl, CategoryServiceBl>();
+        services.AddScoped<ISubCategoryServiceBl, SubCategoryServiceBl>();
+        services.AddScoped<IUserServiceBl, UserServiceBl>();
+        services.AddScoped<IPromptServiceBl, PromptServiceBl>();
+        services.AddScoped<IAiService, OpenAiService>();
 
-        // ServiceCollection services = new ServiceCollection();
-        //// services.AddSingleton<IDal, DalManager>();
-        // services.AddScoped<ICategoryServiceBl, CategoryServiceBl>();
-        // services.AddScoped<ISubCategoryServiceBl, SubCategoryServiceBl>();
-        // services.AddScoped<IUserServiceBl, UserServiceBl>();
-        // services.AddScoped<IPromptServiceBl, PromptServiceBl>();
-
-        // ServiceProvider serviceProvider = services.BuildServiceProvider();
-        // //Dal = serviceProvider.GetRequiredService<IDal>();
-        // CategoryService = serviceProvider.GetRequiredService<ICategoryServiceBl>();
-        // SubCategoryService = serviceProvider.GetRequiredService<ISubCategoryServiceBl>();
-        // UserService = serviceProvider.GetRequiredService<UserServiceBl>();
-        // PromptService = serviceProvider.GetRequiredService<PromptServiceBl>();
+        ServiceProvider serviceProvider = services.BuildServiceProvider();
+        Dal = serviceProvider.GetRequiredService<IDal>();
+        CategoryService = serviceProvider.GetRequiredService<ICategoryServiceBl>();
+        SubCategoryService = serviceProvider.GetRequiredService<ISubCategoryServiceBl>();
+        UserService = serviceProvider.GetRequiredService<IUserServiceBl>();
+        PromptService = serviceProvider.GetRequiredService<IPromptServiceBl>();
+        aiService = serviceProvider.GetRequiredService<IAiService>();
     }
 }
