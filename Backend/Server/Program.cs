@@ -18,11 +18,9 @@ builder.Services.AddCors(options =>
         });
 });
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-  options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddScoped<IDal,DalManager>();
+builder.Services.AddScoped<IConfigurationBuilder, ConfigurationBuilder>();
 builder.Services.AddScoped<IBl, BlManager>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

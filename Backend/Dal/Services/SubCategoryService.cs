@@ -12,9 +12,9 @@ namespace Dal.Services;
 public class SubCategoryService : ISubCategoryService
 {
     private readonly ApplicationDbContext dbContext;
-    public SubCategoryService(IDal dal)
+    public SubCategoryService(ApplicationDbContext context)
     {
-        dbContext = dal.Context;
+        dbContext = context;
     }
     public SubCategory Create(SubCategory entity)
     {

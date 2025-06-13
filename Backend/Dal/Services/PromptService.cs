@@ -13,9 +13,9 @@ namespace Dal.Services;
 public class PromptService : IPromptService
 {
     private readonly ApplicationDbContext dbContext;
-    public PromptService(IDal dal)
+    public PromptService(ApplicationDbContext context)
     {
-        dbContext = dal.Context;
+        dbContext = context;
     }
     public Prompt Create(Prompt entity)
     {

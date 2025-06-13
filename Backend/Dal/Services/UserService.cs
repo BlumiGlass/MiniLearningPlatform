@@ -12,9 +12,9 @@ namespace Dal.Services;
 public class UserService : IUserService
 {
     private readonly ApplicationDbContext dbContext;
-    public UserService(IDal dal)
+    public UserService(ApplicationDbContext context)
     {
-        dbContext = dal.Context;
+        dbContext = context;
     }
     public User Create(User entity)
     {
